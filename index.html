@@ -1,0 +1,4181 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>QuickFixer — Smart Local Services</title>
+
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #635bff;
+    --primary-dark: #5148e5;
+    --primary-light: #eeedff;
+
+    --orange: #ff8a4c;
+    --green: #12b76a;
+    --red: #f04438;
+    --yellow: #f79009;
+
+    --bg: #f7f8fc;
+    --card: #ffffff;
+    --text: #171a2b;
+    --muted: #7b8194;
+    --border: #e8eaf0;
+
+    --sidebar: 250px;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "DM Sans", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* ==============================
+   SIDEBAR
+============================== */
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: var(--sidebar);
+    height: 100vh;
+
+    background: #111426;
+    color: white;
+
+    padding: 25px 18px;
+
+    display: flex;
+    flex-direction: column;
+
+    z-index: 1000;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    padding: 5px 12px 30px;
+}
+
+.logo-icon {
+    width: 38px;
+    height: 38px;
+
+    border-radius: 11px;
+
+    background: linear-gradient(
+        135deg,
+        #766dff,
+        #5148e5
+    );
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.logo-text {
+    font-family: "Manrope", sans-serif;
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.logo-text span {
+    color: #9d98ff;
+}
+
+.menu-title {
+    color: #6e7388;
+    font-size: 11px;
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+    padding: 0 12px;
+    margin: 15px 0 10px;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.menu button {
+    width: 100%;
+
+    border: none;
+    background: transparent;
+
+    color: #aeb2c4;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    text-align: left;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.menu button:hover {
+    background: #1b1f35;
+    color: white;
+}
+
+.menu button.active {
+    background: #635bff;
+    color: white;
+}
+
+.menu-icon {
+    width: 22px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+}
+
+.help-box {
+    background: #1b1f35;
+    border: 1px solid #292e47;
+
+    padding: 15px;
+
+    border-radius: 13px;
+
+    margin-bottom: 15px;
+}
+
+.help-box h4 {
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.help-box p {
+    font-size: 11px;
+    color: #888da1;
+    line-height: 1.5;
+}
+
+.profile-mini {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 10px;
+}
+
+.avatar {
+    width: 37px;
+    height: 37px;
+
+    border-radius: 50%;
+
+    background: linear-gradient(
+        135deg,
+        #8f88ff,
+        #625aff
+    );
+
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 700;
+}
+
+.profile-mini h4 {
+    font-size: 13px;
+}
+
+.profile-mini p {
+    font-size: 11px;
+    color: #80859a;
+}
+
+/* ==============================
+   MAIN
+============================== */
+
+.main {
+    margin-left: var(--sidebar);
+    min-height: 100vh;
+}
+
+/* ==============================
+   TOPBAR
+============================== */
+
+.topbar {
+    height: 76px;
+
+    background: rgba(255,255,255,.9);
+
+    border-bottom: 1px solid var(--border);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 35px;
+
+    position: sticky;
+    top: 0;
+
+    z-index: 100;
+}
+
+.search {
+    width: 320px;
+
+    position: relative;
+}
+
+.search input {
+    width: 100%;
+
+    border: 1px solid var(--border);
+
+    background: #f8f9fc;
+
+    border-radius: 10px;
+
+    padding: 11px 15px 11px 40px;
+
+    outline: none;
+
+    font-family: inherit;
+}
+
+.search-icon {
+    position: absolute;
+    left: 14px;
+    top: 10px;
+
+    color: #8b91a4;
+}
+
+.top-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.notification {
+    width: 39px;
+    height: 39px;
+
+    border-radius: 10px;
+
+    border: 1px solid var(--border);
+
+    background: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    position: relative;
+}
+
+.notification-dot {
+    position: absolute;
+
+    width: 7px;
+    height: 7px;
+
+    background: var(--red);
+
+    border-radius: 50%;
+
+    top: 8px;
+    right: 8px;
+}
+
+/* ==============================
+   CONTENT
+============================== */
+
+.content {
+    padding: 35px;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+    animation: fade .25s ease;
+}
+
+@keyframes fade {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    margin-bottom: 28px;
+}
+
+.page-header h1 {
+    font-family: "Manrope", sans-serif;
+
+    font-size: 28px;
+
+    margin-bottom: 6px;
+}
+
+.page-header p {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* ==============================
+   BUTTONS
+============================== */
+
+.btn {
+    border: none;
+
+    padding: 11px 17px;
+
+    border-radius: 9px;
+
+    font-family: inherit;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+.btn-light {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.btn-white {
+    background: white;
+    border: 1px solid var(--border);
+}
+
+/* ==============================
+   STAT CARDS
+============================== */
+
+.stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 18px;
+
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+    padding: 20px;
+
+    transition: .2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 10px 30px
+        rgba(20,25,50,.06);
+}
+
+.stat-top {
+    display: flex;
+    justify-content: space-between;
+
+    margin-bottom: 17px;
+}
+
+.stat-icon {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 18px;
+}
+
+.purple {
+    background: #eeedff;
+}
+
+.orange {
+    background: #fff1e8;
+}
+
+.green {
+    background: #e7f8f0;
+}
+
+.blue {
+    background: #e9f4ff;
+}
+
+.stat-card h3 {
+    font-family: "Manrope";
+
+    font-size: 26px;
+
+    margin-bottom: 4px;
+}
+
+.stat-card p {
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+.growth {
+    color: var(--green);
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+/* ==============================
+   GRID
+============================== */
+
+.grid-2 {
+    display: grid;
+
+    grid-template-columns:
+        1.4fr 1fr;
+
+    gap: 20px;
+}
+
+.card {
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+    padding: 22px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+.card-header h3 {
+    font-family: "Manrope";
+
+    font-size: 16px;
+}
+
+.card-header a {
+    font-size: 12px;
+
+    color: var(--primary);
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+/* ==============================
+   AI CARD
+============================== */
+
+.ai-box {
+    background:
+        linear-gradient(
+            135deg,
+            #f2f1ff,
+            #ffffff
+        );
+
+    border: 1px solid #dedcff;
+
+    border-radius: 15px;
+
+    padding: 22px;
+}
+
+.ai-title {
+    display: flex;
+
+    gap: 12px;
+
+    align-items: center;
+
+    margin-bottom: 17px;
+}
+
+.ai-logo {
+    width: 42px;
+    height: 42px;
+
+    background: var(--primary);
+
+    border-radius: 12px;
+
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 18px;
+}
+
+.ai-title h3 {
+    font-size: 15px;
+}
+
+.ai-title p {
+    color: var(--muted);
+
+    font-size: 11px;
+
+    margin-top: 3px;
+}
+
+.problem-box {
+    width: 100%;
+
+    height: 95px;
+
+    resize: none;
+
+    border: 1px solid #dedff0;
+
+    border-radius: 10px;
+
+    padding: 13px;
+
+    outline: none;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    background: white;
+}
+
+.problem-box:focus {
+    border-color: var(--primary);
+}
+
+.ai-bottom {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-top: 12px;
+}
+
+.ai-hint {
+    color: var(--muted);
+
+    font-size: 10px;
+}
+
+/* ==============================
+   BOOKINGS
+============================== */
+
+.booking-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.booking {
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    background: #fafbfc;
+}
+
+.booking-icon {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 10px;
+
+    background: #eeedff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.booking-info {
+    flex: 1;
+}
+
+.booking-info h4 {
+    font-size: 13px;
+
+    margin-bottom: 3px;
+}
+
+.booking-info p {
+    color: var(--muted);
+
+    font-size: 10px;
+}
+
+.status {
+    padding: 5px 9px;
+
+    border-radius: 20px;
+
+    font-size: 9px;
+
+    font-weight: 700;
+}
+
+.status-green {
+    background: #e7f8f0;
+    color: #079455;
+}
+
+.status-yellow {
+    background: #fff5df;
+    color: #b54708;
+}
+
+.status-blue {
+    background: #e9f4ff;
+    color: #175cd3;
+}
+
+/* ==============================
+   TECHNICIAN MATCH
+============================== */
+
+.tech-card {
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 14px 0;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.tech-card:last-child {
+    border-bottom: none;
+}
+
+.tech-avatar {
+    width: 48px;
+    height: 48px;
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ecebff,
+            #dcd9ff
+        );
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+}
+
+.tech-details {
+    flex: 1;
+}
+
+.tech-details h4 {
+    font-size: 13px;
+}
+
+.tech-details p {
+    font-size: 10px;
+
+    color: var(--muted);
+
+    margin-top: 3px;
+}
+
+.match-score {
+    text-align: right;
+}
+
+.score {
+    color: var(--primary);
+
+    font-weight: 800;
+
+    font-size: 13px;
+}
+
+.score-label {
+    font-size: 9px;
+
+    color: var(--muted);
+}
+
+/* ==============================
+   TABLE
+============================== */
+
+.table-card {
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+
+    padding: 14px 18px;
+
+    background: #fafbfc;
+
+    color: #7c8294;
+
+    font-size: 10px;
+
+    text-transform: uppercase;
+
+    letter-spacing: .5px;
+}
+
+td {
+    padding: 15px 18px;
+
+    border-top: 1px solid var(--border);
+
+    font-size: 12px;
+}
+
+td strong {
+    font-size: 12px;
+}
+
+/* ==============================
+   ANALYZER PAGE
+============================== */
+
+.analyzer {
+    max-width: 850px;
+
+    margin: 0 auto;
+}
+
+.analyzer-card {
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+    padding: 30px;
+
+    box-shadow:
+        0 15px 40px
+        rgba(20,25,50,.05);
+}
+
+.analyzer-textarea {
+    width: 100%;
+
+    height: 170px;
+
+    resize: none;
+
+    border: 1px solid var(--border);
+
+    border-radius: 13px;
+
+    padding: 17px;
+
+    font-family: inherit;
+
+    outline: none;
+
+    font-size: 14px;
+
+    margin-bottom: 15px;
+}
+
+.analyzer-textarea:focus {
+    border-color: var(--primary);
+}
+
+.quick-prompts {
+    display: flex;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+
+    margin-bottom: 20px;
+}
+
+.prompt {
+    border: 1px solid var(--border);
+
+    background: white;
+
+    padding: 8px 12px;
+
+    border-radius: 20px;
+
+    cursor: pointer;
+
+    font-size: 11px;
+
+    color: var(--muted);
+}
+
+.prompt:hover {
+    border-color: var(--primary);
+
+    color: var(--primary);
+}
+
+.analysis-result {
+    display: none;
+
+    margin-top: 25px;
+
+    padding: 20px;
+
+    background: #f8f8ff;
+
+    border: 1px solid #dfddff;
+
+    border-radius: 13px;
+}
+
+.result-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap: 12px;
+
+    margin-top: 15px;
+}
+
+.result-item {
+    background: white;
+
+    padding: 14px;
+
+    border-radius: 10px;
+}
+
+.result-item span {
+    display: block;
+
+    font-size: 10px;
+
+    color: var(--muted);
+
+    margin-bottom: 5px;
+}
+
+.result-item strong {
+    font-size: 13px;
+}
+
+/* ==============================
+   ADMIN CHART
+============================== */
+
+.chart {
+    height: 210px;
+
+    display: flex;
+
+    align-items: flex-end;
+
+    gap: 15px;
+
+    padding: 20px 10px 0;
+}
+
+.bar-container {
+    flex: 1;
+
+    height: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: flex-end;
+
+    align-items: center;
+
+    gap: 7px;
+}
+
+.bar {
+    width: 100%;
+
+    max-width: 35px;
+
+    background:
+        linear-gradient(
+            to top,
+            #635bff,
+            #9c97ff
+        );
+
+    border-radius: 7px 7px 2px 2px;
+
+    transition: .3s;
+}
+
+.bar:hover {
+    filter: brightness(1.1);
+}
+
+.bar-container span {
+    font-size: 9px;
+
+    color: var(--muted);
+}
+
+/* ==============================
+   PROFILE
+============================== */
+
+.profile-card {
+    max-width: 700px;
+
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: 16px;
+
+    padding: 25px;
+}
+
+.profile-head {
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    margin-bottom: 25px;
+}
+
+.profile-big {
+    width: 75px;
+    height: 75px;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #766dff,
+            #5148e5
+        );
+
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 28px;
+
+    font-weight: 800;
+}
+
+.profile-head h2 {
+    font-family: "Manrope";
+
+    margin-bottom: 4px;
+}
+
+.profile-head p {
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+.form-grid {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 11px;
+
+    color: var(--muted);
+
+    font-weight: 600;
+}
+
+.form-group input {
+    border: 1px solid var(--border);
+
+    border-radius: 9px;
+
+    padding: 11px;
+
+    outline: none;
+
+    font-family: inherit;
+}
+
+/* ==============================
+   MOBILE
+============================== */
+
+.mobile-menu {
+    display: none;
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 22px;
+
+    cursor: pointer;
+}
+
+@media(max-width: 1050px) {
+
+    .stats {
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width: 800px) {
+
+    :root {
+        --sidebar: 0px;
+    }
+
+    .sidebar {
+        transform: translateX(-100%);
+
+        transition: .25s;
+
+        width: 250px;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .main {
+        margin-left: 0;
+    }
+
+    .mobile-menu {
+        display: block;
+    }
+
+    .topbar {
+        padding: 0 18px;
+    }
+
+    .search {
+        display: none;
+    }
+
+    .content {
+        padding: 20px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .result-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .page-header {
+        gap: 15px;
+        flex-direction: column;
+    }
+
+    .table-card {
+        overflow-x: auto;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =========================================
+     SIDEBAR
+========================================= -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            Q
+        </div>
+
+        <div class="logo-text">
+            Quick<span>Fixer</span>
+        </div>
+
+    </div>
+
+
+    <div class="menu-title">
+        MAIN MENU
+    </div>
+
+
+    <div class="menu">
+
+        <button
+            class="active"
+            onclick="showPage('dashboard', this)">
+
+            <span class="menu-icon">⌂</span>
+
+            Dashboard
+
+        </button>
+
+
+        <button
+            onclick="showPage('analyzer', this)">
+
+            <span class="menu-icon">✦</span>
+
+            AI Problem Solver
+
+        </button>
+
+
+        <button
+            onclick="showPage('bookings', this)">
+
+            <span class="menu-icon">▣</span>
+
+            My Bookings
+
+        </button>
+
+
+        <button
+            onclick="showPage('technicians', this)">
+
+            <span class="menu-icon">⚒</span>
+
+            Technicians
+
+        </button>
+
+    </div>
+
+
+    <div class="menu-title">
+        MANAGEMENT
+    </div>
+
+
+    <div class="menu">
+
+        <button
+            onclick="showPage('admin', this)">
+
+            <span class="menu-icon">◫</span>
+
+            Analytics
+
+        </button>
+
+
+        <button
+            onclick="showPage('profile', this)">
+
+            <span class="menu-icon">◎</span>
+
+            My Profile
+
+        </button>
+
+    </div>
+
+
+    <div class="sidebar-bottom">
+
+        <div class="help-box">
+
+            <h4>Need help?</h4>
+
+            <p>
+                Our support team is available
+                to help you with your booking.
+            </p>
+
+        </div>
+
+
+        <div class="profile-mini">
+
+            <div class="avatar">
+                C
+            </div>
+
+            <div>
+
+                <h4>Charu</h4>
+
+                <p>Customer</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+
+<!-- =========================================
+     MAIN
+========================================= -->
+
+<main class="main">
+
+
+<!-- TOPBAR -->
+
+<header class="topbar">
+
+    <button
+        class="mobile-menu"
+        onclick="toggleSidebar()">
+
+        ☰
+
+    </button>
+
+
+    <div class="search">
+
+        <span class="search-icon">
+            ⌕
+        </span>
+
+        <input
+            type="text"
+            placeholder="Search services, bookings..."
+        >
+
+    </div>
+
+
+    <div class="top-actions">
+
+        <div
+            class="notification"
+            onclick="showNotification()">
+
+            ♢
+
+            <span class="notification-dot"></span>
+
+        </div>
+
+
+        <div class="avatar">
+            C
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<div class="content">
+
+
+<!-- =========================================
+     DASHBOARD
+========================================= -->
+
+<section
+    class="page active"
+    id="dashboard">
+
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                Good morning, Charu 👋
+            </h1>
+
+            <p>
+                Here's what's happening with your services today.
+            </p>
+
+        </div>
+
+
+        <button
+            class="btn btn-primary"
+            onclick="showPageById('analyzer')">
+
+            + New Service Request
+
+        </button>
+
+    </div>
+
+
+    <!-- STATS -->
+
+    <div class="stats">
+
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <div class="stat-icon purple">
+                    ⚒
+                </div>
+
+                <span class="growth">
+                    +12%
+                </span>
+
+            </div>
+
+            <h3>8</h3>
+
+            <p>
+                Total Services
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <div class="stat-icon orange">
+                    ◷
+                </div>
+
+                <span class="growth">
+                    Active
+                </span>
+
+            </div>
+
+            <h3>1</h3>
+
+            <p>
+                Active Booking
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <div class="stat-icon green">
+                    ✓
+                </div>
+
+                <span class="growth">
+                    98%
+                </span>
+
+            </div>
+
+            <h3>7</h3>
+
+            <p>
+                Completed Services
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <div class="stat-icon blue">
+                    ₹
+                </div>
+
+                <span class="growth">
+                    Saved
+                </span>
+
+            </div>
+
+            <h3>₹1,240</h3>
+
+            <p>
+                Estimated Savings
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- MAIN DASHBOARD GRID -->
+
+    <div class="grid-2">
+
+
+        <!-- AI -->
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h3>
+                        🤖 QuickFixer AI
+                    </h3>
+
+                    <p
+                        style="
+                        color:var(--muted);
+                        font-size:11px;
+                        margin-top:4px;
+                        ">
+
+                        Describe your problem and let AI find the right service.
+
+                    </p>
+
+                </div>
+
+                <span
+                    style="
+                    color:#12b76a;
+                    font-size:10px;
+                    font-weight:700;
+                    ">
+
+                    ● ONLINE
+
+                </span>
+
+            </div>
+
+
+            <div class="ai-box">
+
+                <div class="ai-title">
+
+                    <div class="ai-logo">
+                        ✦
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            What needs fixing?
+                        </h3>
+
+                        <p>
+                            You can describe it naturally.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <textarea
+                    class="problem-box"
+                    id="dashboardProblem"
+                    placeholder="Example: My AC is running but it isn't cooling..."></textarea>
+
+
+                <div class="ai-bottom">
+
+                    <span class="ai-hint">
+                        AI will classify your service automatically
+                    </span>
+
+                    <button
+                        class="btn btn-primary"
+                        onclick="analyzeDashboardProblem()">
+
+                        Analyze →
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIVE BOOKING -->
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <h3>
+                    Active Booking
+                </h3>
+
+                <a
+                    onclick="showPageById('bookings')">
+
+                    View all
+
+                </a>
+
+            </div>
+
+
+            <div class="booking-list">
+
+
+                <div class="booking">
+
+                    <div class="booking-icon">
+                        ❄️
+                    </div>
+
+                    <div class="booking-info">
+
+                        <h4>
+                            AC Repair
+                        </h4>
+
+                        <p>
+                            Today · 2:30 PM
+                        </p>
+
+                    </div>
+
+                    <span class="status status-green">
+                        Confirmed
+                    </span>
+
+                </div>
+
+
+                <div class="booking">
+
+                    <div class="booking-icon">
+                        ⚡
+                    </div>
+
+                    <div class="booking-info">
+
+                        <h4>
+                            Fan Installation
+                        </h4>
+
+                        <p>
+                            12 Aug · Completed
+                        </p>
+
+                    </div>
+
+                    <span class="status status-blue">
+                        Done
+                    </span>
+
+                </div>
+
+
+                <div class="booking">
+
+                    <div class="booking-icon">
+                        🔧
+                    </div>
+
+                    <div class="booking-info">
+
+                        <h4>
+                            Tap Repair
+                        </h4>
+
+                        <p>
+                            08 Aug · Completed
+                        </p>
+
+                    </div>
+
+                    <span class="status status-blue">
+                        Done
+                    </span>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- TECHNICIAN MATCH -->
+
+    <div
+        class="card"
+        style="margin-top:20px;">
+
+        <div class="card-header">
+
+            <div>
+
+                <h3>
+                    Best Technicians Near You
+                </h3>
+
+                <p
+                    style="
+                    color:var(--muted);
+                    font-size:11px;
+                    margin-top:3px;
+                    ">
+
+                    AI-ranked based on skill, distance, rating and availability.
+
+                </p>
+
+            </div>
+
+            <a
+                onclick="showPageById('technicians')">
+
+                View all
+
+            </a>
+
+        </div>
+
+
+        <div class="grid-2"
+             style="grid-template-columns:1fr 1fr;">
+
+
+            <div class="tech-card">
+
+                <div class="tech-avatar">
+                    👨‍🔧
+                </div>
+
+                <div class="tech-details">
+
+                    <h4>
+                        Rahul Kumar
+                    </h4>
+
+                    <p>
+                        AC Specialist · 1.2 km
+                    </p>
+
+                </div>
+
+                <div class="match-score">
+
+                    <div class="score">
+                        94%
+                    </div>
+
+                    <div class="score-label">
+                        Match
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="tech-card">
+
+                <div class="tech-avatar">
+                    👨‍🔧
+                </div>
+
+                <div class="tech-details">
+
+                    <h4>
+                        Amit Sharma
+                    </h4>
+
+                    <p>
+                        Electrical · 0.8 km
+                    </p>
+
+                </div>
+
+                <div class="match-score">
+
+                    <div class="score">
+                        89%
+                    </div>
+
+                    <div class="score-label">
+                        Match
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================
+     AI ANALYZER
+========================================= -->
+
+<section
+    class="page"
+    id="analyzer">
+
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                AI Problem Solver ✦
+            </h1>
+
+            <p>
+                Explain your problem. QuickFixer AI will identify the service you need.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="analyzer">
+
+        <div class="analyzer-card">
+
+            <h2
+                style="
+                font-family:Manrope;
+                margin-bottom:8px;
+                ">
+
+                What's the problem?
+
+            </h2>
+
+            <p
+                style="
+                color:var(--muted);
+                font-size:13px;
+                margin-bottom:20px;
+                ">
+
+                Don't worry about technical terms. Just explain the issue naturally.
+
+            </p>
+
+
+            <textarea
+                id="analyzerInput"
+                class="analyzer-textarea"
+                placeholder="Example: My washing machine is making a loud noise and stopping during the wash cycle..."></textarea>
+
+
+            <div class="quick-prompts">
+
+                <button
+                    class="prompt"
+                    onclick="setPrompt('My AC is not cooling properly')">
+
+                    ❄️ AC not cooling
+
+                </button>
+
+                <button
+                    class="prompt"
+                    onclick="setPrompt('My kitchen tap is leaking')">
+
+                    🔧 Leaking tap
+
+                </button>
+
+                <button
+                    class="prompt"
+                    onclick="setPrompt('My ceiling fan is not working')">
+
+                    ⚡ Fan not working
+
+                </button>
+
+                <button
+                    class="prompt"
+                    onclick="setPrompt('My washing machine is making noise')">
+
+                    🛠 Washing machine
+
+                </button>
+
+            </div>
+
+
+            <button
+                class="btn btn-primary"
+                style="width:100%;"
+                onclick="runAI()">
+
+                ✦ Analyze Problem
+
+            </button>
+
+
+            <div
+                class="analysis-result"
+                id="analysisResult">
+
+                <h3>
+                    AI Analysis Complete ✓
+                </h3>
+
+                <p
+                    style="
+                    color:var(--muted);
+                    font-size:12px;
+                    margin-top:5px;
+                    ">
+
+                    We've identified the most suitable service.
+
+                </p>
+
+
+                <div class="result-grid">
+
+
+                    <div class="result-item">
+
+                        <span>
+                            SERVICE
+                        </span>
+
+                        <strong id="resultService">
+                            AC Repair
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-item">
+
+                        <span>
+                            URGENCY
+                        </span>
+
+                        <strong id="resultUrgency">
+                            Medium
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-item">
+
+                        <span>
+                            ESTIMATED PRICE
+                        </span>
+
+                        <strong id="resultPrice">
+                            ₹500 – ₹1,500
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="btn btn-primary"
+                    style="margin-top:15px;"
+                    onclick="findMatch()">
+
+                    Find Best Technician →
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================
+     BOOKINGS
+========================================= -->
+
+<section
+    class="page"
+    id="bookings">
+
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                My Bookings
+            </h1>
+
+            <p>
+                Track and manage your service requests.
+            </p>
+
+        </div>
+
+        <button
+            class="btn btn-primary"
+            onclick="showPageById('analyzer')">
+
+            + New Booking
+
+        </button>
+
+    </div>
+
+
+    <div class="table-card">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Service
+                    </th>
+
+                    <th>
+                        Technician
+                    </th>
+
+                    <th>
+                        Date
+                    </th>
+
+                    <th>
+                        Price
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                <tr>
+
+                    <td>
+                        <strong>❄️ AC Repair</strong>
+                    </td>
+
+                    <td>
+                        Rahul Kumar
+                    </td>
+
+                    <td>
+                        Today, 2:30 PM
+                    </td>
+
+                    <td>
+                        ₹800
+                    </td>
+
+                    <td>
+                        <span class="status status-green">
+                            Confirmed
+                        </span>
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        <strong>⚡ Fan Installation</strong>
+                    </td>
+
+                    <td>
+                        Amit Sharma
+                    </td>
+
+                    <td>
+                        12 Aug 2026
+                    </td>
+
+                    <td>
+                        ₹450
+                    </td>
+
+                    <td>
+                        <span class="status status-blue">
+                            Completed
+                        </span>
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        <strong>🔧 Tap Repair</strong>
+                    </td>
+
+                    <td>
+                        Sameer Patil
+                    </td>
+
+                    <td>
+                        08 Aug 2026
+                    </td>
+
+                    <td>
+                        ₹350
+                    </td>
+
+                    <td>
+                        <span class="status status-blue">
+                            Completed
+                        </span>
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================
+     TECHNICIANS
+========================================= -->
+
+<section
+    class="page"
+    id="technicians">
+
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                Find Technicians
+            </h1>
+
+            <p>
+                AI-ranked professionals available in your area.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="grid-2">
+
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <h3>
+                    Recommended for you
+                </h3>
+
+            </div>
+
+
+            <div class="tech-card">
+
+                <div class="tech-avatar">
+                    👨‍🔧
+                </div>
+
+                <div class="tech-details">
+
+                    <h4>
+                        Rahul Kumar
+                    </h4>
+
+                    <p>
+                        AC Specialist · 1.2 km · ⭐ 4.8
+                    </p>
+
+                </div>
+
+                <div class="match-score">
+
+                    <div class="score">
+                        94%
+                    </div>
+
+                    <div class="score-label">
+                        Best Match
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="tech-card">
+
+                <div class="tech-avatar">
+                    👨‍🔧
+                </div>
+
+                <div class="tech-details">
+
+                    <h4>
+                        Amit Sharma
+                    </h4>
+
+                    <p>
+                        Electrician · 0.8 km · ⭐ 4.7
+                    </p>
+
+                </div>
+
+                <div class="match-score">
+
+                    <div class="score">
+                        89%
+                    </div>
+
+                    <div class="score-label">
+                        Match
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="tech-card">
+
+                <div class="tech-avatar">
+                    👨‍🔧
+                </div>
+
+                <div class="tech-details">
+
+                    <h4>
+                        Sameer Patil
+                    </h4>
+
+                    <p>
+                        Plumber · 2.1 km · ⭐ 4.9
+                    </p>
+
+                </div>
+
+                <div class="match-score">
+
+                    <div class="score">
+                        87%
+                    </div>
+
+                    <div class="score-label">
+                        Match
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <h3>
+                    How we rank
+                </h3>
+
+            </div>
+
+
+            <div style="line-height:2.4;">
+
+                <p>
+                    🎯 <strong>Skill Match</strong>
+                    <span style="float:right;">35%</span>
+                </p>
+
+                <p>
+                    📍 <strong>Distance</strong>
+                    <span style="float:right;">25%</span>
+                </p>
+
+                <p>
+                    ⭐ <strong>Rating</strong>
+                    <span style="float:right;">20%</span>
+                </p>
+
+                <p>
+                    🟢 <strong>Availability</strong>
+                    <span style="float:right;">10%</span>
+                </p>
+
+                <p>
+                    🛡️ <strong>Reliability</strong>
+                    <span style="float:right;">10%</span>
+                </p>
+
+            </div>
+
+
+            <div
+                style="
+                margin-top:20px;
+                padding:15px;
+                background:#f5f4ff;
+                border-radius:10px;
+                font-size:11px;
+                color:#635bff;
+                ">
+
+                ✦ QuickFixer doesn't simply select
+                the nearest technician. Our matching
+                engine evaluates multiple factors.
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================
+     ADMIN ANALYTICS
+========================================= -->
+
+<section
+    class="page"
+    id="admin">
+
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                Analytics Dashboard
+            </h1>
+
+            <p>
+                Monitor QuickFixer's service network.
+            </p>
+
+        </div>
+
+        <button class="btn btn-white">
+            Export Report
+        </button>
+
+    </div>
+
+
+    <div class="stats">
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon purple">
+                👥
+            </div>
+
+            <h3 style="margin-top:15px;">
+                1,284
+            </h3>
+
+            <p>
+                Customers
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon orange">
+                ⚒
+            </div>
+
+            <h3 style="margin-top:15px;">
+                142
+            </h3>
+
+            <p>
+                Technicians
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon green">
+                ✓
+            </div>
+
+            <h3 style="margin-top:15px;">
+                3,842
+            </h3>
+
+            <p>
+                Completed Jobs
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon blue">
+                ⏱
+            </div>
+
+            <h3 style="margin-top:15px;">
+                14 min
+            </h3>
+
+            <p>
+                Avg Response Time
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="grid-2">
+
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <h3>
+                    Service Demand
+                </h3>
+
+                <span
+                    style="
+                    color:var(--muted);
+                    font-size:11px;
+                    ">
+
+                    Last 7 days
+
+                </span>
+
+            </div>
+
+
+            <div class="chart">
+
+
+                <div class="bar-container">
+
+                    <div
+                        class="bar"
+                        style="height:45%;"></div>
+
+                    <span>
+                        Mon
+                    </span>
+
+                </div>
+
+
+                <div class="bar-container">
+
+                    <div
+                        class="bar"
+                        style="height:62%;"></div>
+
+                    <span>
+                        Tue
+                    </span>
+
+                </div>
+
+
+                <div class="bar-container">
+
+                    <div
+                        class="bar"
+                        style="height:55%;"></div>
+
+                    <span>
+                        Wed
+                    </span>
+
+                </div>
+
+
+                <div class="bar-container">
+
+                    <div
+                        class="bar"
+                        style="height:78%;"></div>
+
+                    <span>
+                        Thu
+                    </span>
+
+                </div>
+
+
+                <div class="bar-container">
+
+                    <div
+                        class="bar"
+                        style="height:68%;"></div>
+
+                    <span>
+                        Fri
+                    </span>
+
+                </div>
+
+
+                <div class="bar-container">
+
+                    <div
+                        class="bar"
+                        style="height:91%;"></div>
+
+                    <span>
+                        Sat
+                    </span>
+
+                </div>
+
+
+                <div class="bar-container">
+
+                    <div
+                        class="bar"
+                        style="height:74%;"></div>
+
+                    <span>
+                        Sun
+                    </span>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <h3>
+                    Service Categories
+                </h3>
+
+            </div>
+
+
+            <div style="margin-top:10px;">
+
+                <div style="margin-bottom:17px;">
+
+                    <div
+                        style="
+                        display:flex;
+                        justify-content:space-between;
+                        font-size:12px;
+                        margin-bottom:6px;
+                        ">
+
+                        <span>
+                            AC Repair
+                        </span>
+
+                        <strong>
+                            34%
+                        </strong>
+
+                    </div>
+
+                    <div
+                        style="
+                        height:7px;
+                        background:#eee;
+                        border-radius:10px;
+                        ">
+
+                        <div
+                            style="
+                            width:34%;
+                            height:100%;
+                            background:#635bff;
+                            border-radius:10px;
+                            "></div>
+
+                    </div>
+
+                </div>
+
+
+                <div style="margin-bottom:17px;">
+
+                    <div
+                        style="
+                        display:flex;
+                        justify-content:space-between;
+                        font-size:12px;
+                        margin-bottom:6px;
+                        ">
+
+                        <span>
+                            Plumbing
+                        </span>
+
+                        <strong>
+                            27%
+                        </strong>
+
+                    </div>
+
+                    <div
+                        style="
+                        height:7px;
+                        background:#eee;
+                        border-radius:10px;
+                        ">
+
+                        <div
+                            style="
+                            width:27%;
+                            height:100%;
+                            background:#ff8a4c;
+                            border-radius:10px;
+                            "></div>
+
+                    </div>
+
+                </div>
+
+
+                <div style="margin-bottom:17px;">
+
+                    <div
+                        style="
+                        display:flex;
+                        justify-content:space-between;
+                        font-size:12px;
+                        margin-bottom:6px;
+                        ">
+
+                        <span>
+                            Electrical
+                        </span>
+
+                        <strong>
+                            22%
+                        </strong>
+
+                    </div>
+
+                    <div
+                        style="
+                        height:7px;
+                        background:#eee;
+                        border-radius:10px;
+                        ">
+
+                        <div
+                            style="
+                            width:22%;
+                            height:100%;
+                            background:#12b76a;
+                            border-radius:10px;
+                            "></div>
+
+                    </div>
+
+                </div>
+
+
+                <div>
+
+                    <div
+                        style="
+                        display:flex;
+                        justify-content:space-between;
+                        font-size:12px;
+                        margin-bottom:6px;
+                        ">
+
+                        <span>
+                            Appliances
+                        </span>
+
+                        <strong>
+                            17%
+                        </strong>
+
+                    </div>
+
+                    <div
+                        style="
+                        height:7px;
+                        background:#eee;
+                        border-radius:10px;
+                        ">
+
+                        <div
+                            style="
+                            width:17%;
+                            height:100%;
+                            background:#f79009;
+                            border-radius:10px;
+                            "></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================================
+     PROFILE
+========================================= -->
+
+<section
+    class="page"
+    id="profile">
+
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                My Profile
+            </h1>
+
+            <p>
+                Manage your QuickFixer account.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="profile-card">
+
+
+        <div class="profile-head">
+
+            <div class="profile-big">
+                C
+            </div>
+
+            <div>
+
+                <h2>
+                    Charu
+                </h2>
+
+                <p>
+                    Customer · Nagpur
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-grid">
+
+
+            <div class="form-group">
+
+                <label>
+                    FULL NAME
+                </label>
+
+                <input
+                    value="Charu">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    PHONE
+                </label>
+
+                <input
+                    value="+91 XXXXX XXXXX">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    EMAIL
+                </label>
+
+                <input
+                    value="charu@example.com">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    CITY
+                </label>
+
+                <input
+                    value="Nagpur">
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="btn btn-primary"
+            style="margin-top:20px;"
+            onclick="saveProfile()">
+
+            Save Changes
+
+        </button>
+
+
+    </div>
+
+</section>
+
+
+</div>
+
+</main>
+
+
+
+<script>
+
+/* =========================================
+   PAGE NAVIGATION
+========================================= */
+
+function showPage(pageId, button) {
+
+    document
+        .querySelectorAll(".page")
+        .forEach(page => {
+
+            page.classList.remove("active");
+
+        });
+
+
+    document
+        .getElementById(pageId)
+        .classList.add("active");
+
+
+    document
+        .querySelectorAll(".menu button")
+        .forEach(btn => {
+
+            btn.classList.remove("active");
+
+        });
+
+
+    if (button) {
+
+        button.classList.add("active");
+
+    }
+
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+
+    if (window.innerWidth < 800) {
+
+        document
+            .getElementById("sidebar")
+            .classList.remove("open");
+
+    }
+
+}
+
+
+/* =========================================
+   PAGE BY ID
+========================================= */
+
+function showPageById(pageId) {
+
+    const button =
+        document.querySelector(
+            `.menu button[onclick*="'${pageId}'"]`
+        );
+
+    showPage(pageId, button);
+
+}
+
+
+/* =========================================
+   MOBILE SIDEBAR
+========================================= */
+
+function toggleSidebar() {
+
+    document
+        .getElementById("sidebar")
+        .classList.toggle("open");
+
+}
+
+
+/* =========================================
+   AI DASHBOARD
+========================================= */
+
+function analyzeDashboardProblem() {
+
+    const input =
+        document
+        .getElementById("dashboardProblem")
+        .value
+        .trim();
+
+
+    if (!input) {
+
+        alert(
+            "Please describe your problem first."
+        );
+
+        return;
+
+    }
+
+
+    document
+        .getElementById("analyzerInput")
+        .value = input;
+
+
+    showPageById("analyzer");
+
+    setTimeout(() => {
+
+        runAI();
+
+    }, 400);
+
+}
+
+
+/* =========================================
+   QUICK PROMPT
+========================================= */
+
+function setPrompt(text) {
+
+    document
+        .getElementById("analyzerInput")
+        .value = text;
+
+}
+
+
+/* =========================================
+   AI ANALYSIS DEMO
+========================================= */
+
+function runAI() {
+
+    const input =
+        document
+        .getElementById("analyzerInput")
+        .value
+        .toLowerCase();
+
+
+    if (!input.trim()) {
+
+        alert(
+            "Please describe your problem first."
+        );
+
+        return;
+
+    }
+
+
+    let service = "General Home Service";
+
+    let urgency = "Medium";
+
+    let price = "₹500 – ₹1,500";
+
+
+    if (
+        input.includes("ac") ||
+        input.includes("cool") ||
+        input.includes("air conditioner")
+    ) {
+
+        service = "AC Repair";
+
+        price = "₹500 – ₹1,500";
+
+    }
+
+
+    else if (
+        input.includes("tap") ||
+        input.includes("pipe") ||
+        input.includes("leak") ||
+        input.includes("water")
+    ) {
+
+        service = "Plumbing";
+
+        price = "₹300 – ₹1,200";
+
+    }
+
+
+    else if (
+        input.includes("fan") ||
+        input.includes("switch") ||
+        input.includes("light") ||
+        input.includes("electric")
+    ) {
+
+        service = "Electrical";
+
+        price = "₹300 – ₹1,000";
+
+    }
+
+
+    else if (
+        input.includes("washing") ||
+        input.includes("fridge") ||
+        input.includes("refrigerator")
+    ) {
+
+        service = "Appliance Repair";
+
+        price = "₹400 – ₹1,500";
+
+    }
+
+
+    if (
+        input.includes("spark") ||
+        input.includes("smoke") ||
+        input.includes("fire") ||
+        input.includes("danger")
+    ) {
+
+        urgency = "High";
+
+    }
+
+
+    document
+        .getElementById("resultService")
+        .innerText = service;
+
+
+    document
+        .getElementById("resultUrgency")
+        .innerText = urgency;
+
+
+    document
+        .getElementById("resultPrice")
+        .innerText = price;
+
+
+    document
+        .getElementById("analysisResult")
+        .style.display = "block";
+
+
+    document
+        .getElementById("analysisResult")
+        .scrollIntoView({
+            behavior: "smooth",
+            block: "nearest"
+        });
+
+}
+
+
+/* =========================================
+   TECHNICIAN MATCH
+========================================= */
+
+function findMatch() {
+
+    alert(
+        "🎯 Best Match Found!\n\n" +
+        "Rahul Kumar\n" +
+        "AC Specialist\n" +
+        "⭐ 4.8 rating\n" +
+        "📍 1.2 km away\n\n" +
+        "AI Match Score: 94%"
+    );
+
+}
+
+
+/* =========================================
+   NOTIFICATION
+========================================= */
+
+function showNotification() {
+
+    alert(
+        "🔔 Notifications\n\n" +
+        "• Rahul Kumar accepted your AC repair request.\n\n" +
+        "• Your technician will arrive at 2:30 PM."
+    );
+
+}
+
+
+/* =========================================
+   PROFILE
+========================================= */
+
+function saveProfile() {
+
+    alert(
+        "✓ Profile changes saved successfully."
+    );
+
+}
+
+
+/* =========================================
+   INITIALIZATION
+========================================= */
+
+console.log(
+    "QuickFixer frontend loaded successfully."
+);
+
+</script>
+
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+</body>
+</html>
+
+
+.nav {
+
+    width: 100%;
+
+    padding: 12px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: transparent;
+
+    color: #aeb2c4;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    margin-bottom: 5px;
+
+    font-size: 13px;
+
+}
+
+
+.nav:hover {
+
+    background:
+        #1d2035;
+
+    color: white;
+
+}
+
+
+.nav.active {
+
+    background:
+        var(--primary);
+
+    color: white;
+
+}
+
+
+/* MAIN */
+
+main {
+
+    margin-left: 245px;
+
+}
+
+
+/* HEADER */
+
+header {
+
+    height: 72px;
+
+    background: white;
+
+    border-bottom:
+        1px solid var(--border);
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding:
+        0 30px;
+
+}
+
+
+.search {
+
+    width: 330px;
+
+    padding: 10px;
+
+    background: #f7f8fb;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+}
+
+
+.search input {
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    margin-left: 8px;
+
+}
+
+
+.user {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+
+}
+
+
+.avatar {
+
+    width: 38px;
+
+    height: 38px;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7d75ff,
+            #5148e5
+        );
+
+    color: white;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-weight: 700;
+
+}
+
+
+/* CONTENT */
+
+.content {
+
+    padding: 35px;
+
+}
+
+
+.page {
+
+    display: none;
+
+}
+
+
+.page.active {
+
+    display: block;
+
+}
+
+
+.heading {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 28px;
+
+}
+
+
+.heading h1 {
+
+    font-size: 28px;
+
+    margin-bottom: 5px;
+
+}
+
+
+.heading p {
+
+    color: var(--muted);
+
+    font-size: 13px;
+
+}
+
+
+/* BUTTON */
+
+.primary {
+
+    background:
+        var(--primary);
+
+    color: white;
+
+    border: none;
+
+    padding:
+        11px 17px;
+
+    border-radius: 9px;
+
+    cursor: pointer;
+
+    font-weight: 700;
+
+}
+
+
+.primary:hover {
+
+    background:
+        #5148e5;
+
+}
+
+
+.full {
+
+    width: 100%;
+
+}
+
+
+/* STATS */
+
+.stats {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 17px;
+
+    margin-bottom: 22px;
+
+}
+
+
+.stat {
+
+    background: white;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 14px;
+
+    padding: 20px;
+
+}
+
+
+.stat h2 {
+
+    font-size: 26px;
+
+    margin-top: 15px;
+
+}
+
+
+.stat p {
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+}
+
+
+.stat-icon {
+
+    width: 40px;
+
+    height: 40px;
+
+    border-radius: 10px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+}
+
+
+.purple {
+
+    background: #eeedff;
+
+}
+
+
+.orange {
+
+    background: #fff0e7;
+
+}
+
+
+.green {
+
+    background: #e5f8ef;
+
+}
+
+
+.blue {
+
+    background: #e8f4ff;
+
+}
+
+
+/* CARDS */
+
+.card {
+
+    background: white;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 14px;
+
+    padding: 22px;
+
+}
+
+
+.card h3 {
+
+    margin-bottom: 6px;
+
+}
+
+
+.muted {
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+}
+
+
+.two-columns {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 20px;
+
+}
+
+
+textarea {
+
+    width: 100%;
+
+    height: 130px;
+
+    resize: none;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 10px;
+
+    padding: 13px;
+
+    margin:
+        18px 0;
+
+    outline: none;
+
+    font-family: inherit;
+
+}
+
+
+textarea:focus {
+
+    border-color:
+        var(--primary);
+
+}
+
+
+/* SOLVER */
+
+.solver-card {
+
+    max-width: 850px;
+
+    margin: auto;
+
+    background: white;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 18px;
+
+    padding: 30px;
+
+}
+
+
+.prompts {
+
+    display: flex;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+
+    margin-bottom: 15px;
+
+}
+
+
+.prompts button {
+
+    background: white;
+
+    border:
+        1px solid var(--border);
+
+    padding:
+        8px 12px;
+
+    border-radius: 20px;
+
+    cursor: pointer;
+
+}
+
+
+.analysis {
+
+    display: none;
+
+    background:
+        #f4f3ff;
+
+    border:
+        1px solid #dfdcff;
+
+    border-radius: 12px;
+
+    padding: 20px;
+
+    margin-top: 20px;
+
+}
+
+
+.result-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 12px;
+
+    margin:
+        15px 0;
+
+}
+
+
+.result-grid > div {
+
+    background: white;
+
+    padding: 15px;
+
+    border-radius: 10px;
+
+}
+
+
+.result-grid small {
+
+    display: block;
+
+    color: var(--muted);
+
+    margin-bottom: 5px;
+
+}
+
+
+/* BOOKINGS */
+
+.booking {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+    padding: 12px;
+
+    background: #fafbfc;
+
+    border-radius: 9px;
+
+    margin-bottom: 8px;
+
+}
+
+
+.booking-icon {
+
+    width: 40px;
+
+    height: 40px;
+
+    background: #eeedff;
+
+    border-radius: 9px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+}
+
+
+.booking p {
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    margin-top: 3px;
+
+}
+
+
+.booking .status {
+
+    margin-left: auto;
+
+}
+
+
+/* TABLE */
+
+table {
+
+    width: 100%;
+
+    border-collapse:
+        collapse;
+
+}
+
+
+th {
+
+    text-align: left;
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    padding: 12px;
+
+    background: #fafbfc;
+
+}
+
+
+td {
+
+    padding: 15px 12px;
+
+    border-top:
+        1px solid var(--border);
+
+    font-size: 12px;
+
+}
+
+
+.status {
+
+    background:
+        #e7f8ef;
+
+    color:
+        #087443;
+
+    padding:
+        5px 9px;
+
+    border-radius:
+        20px;
+
+    font-size:
+        10px;
+
+    font-weight:
+        700;
+
+}
+
+
+/* TECHNICIANS */
+
+.technician-grid {
+
+    display: grid;
+
+    gap: 12px;
+
+}
+
+
+.tech {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+}
+
+
+.tech-avatar {
+
+    width: 50px;
+
+    height: 50px;
+
+    border-radius: 13px;
+
+    background:
+        #eeedff;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 22px;
+
+}
+
+
+.tech-info {
+
+    flex: 1;
+
+}
+
+
+.tech-info p {
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    margin-top: 4px;
+
+}
+
+
+.match {
+
+    text-align: center;
+
+    margin-right: 15px;
+
+}
+
+
+.match strong {
+
+    display: block;
+
+    color:
+        var(--primary);
+
+    font-size: 18px;
+
+}
+
+
+.match small {
+
+    color:
+        var(--muted);
+
+    font-size: 9px;
+
+}
+
+
+/* ANALYTICS */
+
+.network {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+
+    margin-top: 20px;
+
+}
+
+
+.network div {
+
+    background:
+        var(--primary);
+
+    color: white;
+
+    padding: 13px;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+
+}
+
+
+/* RESPONSIVE */
+
+@media(max-width: 900px) {
+
+    .sidebar {
+
+        width: 200px;
+
+    }
+
+    main {
+
+        margin-left: 200px;
+
+    }
+
+    .stats {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+    .two-columns {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
+
+
+@media(max-width: 650px) {
+
+    .sidebar {
+
+        display: none;
+
+    }
+
+    main {
+
+        margin-left: 0;
+
+    }
+
+    .content {
+
+        padding: 20px;
+
+    }
+
+    .stats {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .heading {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 15px;
+
+    }
+
+    .result-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    header {
+
+        padding: 0 15px;
+
+    }
+
+    .search {
+
+        width: 200px;
+
+    }
+
+}
